@@ -1,0 +1,21 @@
+/*design for index.php*/
+.upload{
+    display: none;/*imgupload*/
+}
+
+.imglable:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.imglable{
+    color: #007fff;
+}
+
+.top{
+    position: absolute;
+    top: 10%;
+    right: 0%;
+    left: 0%;
+    pointer-events: none;
+}
