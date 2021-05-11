@@ -123,11 +123,11 @@ class FileList
 
     public function __construct()
     {
-        $image=new Image();
-        list($imgname,$create_date)=$image->select();
+        $image = new Image();
+        list($imgname, $create_date) = $image->select();
 
-        $this->filename=$imgname;
-        $this->date=$create_date;
+        $this->filename = $imgname;
+        $this->date = $create_date;
         $this->size = array();
 
         foreach ($this->filename as $value) {
@@ -144,13 +144,15 @@ class FileList
         $table .= '<thead><th scope="col" class="text-center">URL</th><th scope="col" class="text-center">日期</th><th scope="col" class="text-center">大小</th><th scope="col" class="text-center">操作</th></thead>';
         $table .= '<tbody>';
         for ($i = 0; $i < count($this->filename); $i++) {
-            $url = 'http://0.0.0.0/' . 'uploads/' . $this->filename[$i];
-            $table .= '<tr>';
-            $table .= '<td class="text-center">' . htmlentities($url) . '</td>';
-            $table .= '<td class="text-center">' . htmlentities($this->date[$i]) . '</td>';
-            $table .= '<td class="text-center">' . htmlentities($this->size[$i]) . '</td>';
-            $table .= '<td class="text-center" filename="' . htmlentities($this->filename[$i]) . '"><a href="#" class="download">下载</a> / <a href="' . htmlentities($url) . '" target="_blank" class="preview">预览</a> / <a href="#" class="delete">删除</a></td>';
-            $table .= '</tr>';
+            if ($this->filename[$i]) {
+                $url = 'http://0.0.0.0/' . 'uploads/' . $this->filename[$i];
+                $table .= '<tr>';
+                $table .= '<td class="text-center">' . htmlentities($url) . '</td>';
+                $table .= '<td class="text-center">' . htmlentities($this->date[$i]) . '</td>';
+                $table .= '<td class="text-center">' . htmlentities($this->size[$i]) . '</td>';
+                $table .= '<td class="text-center" filename="' . htmlentities($this->filename[$i]) . '"><a href="#" class="download">下载</a> / <a href="' . htmlentities($url) . '" target="_blank" class="preview">预览</a> / <a href="#" class="delete">删除</a></td>';
+                $table .= '</tr>';
+            }
         }
         $table .= '</tbody></table></div>';
         echo $table;
