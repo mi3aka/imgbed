@@ -44,12 +44,11 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
     if (strlen($username) < 20 && strlen($username) > 5 && strlen($password) > 5) {
         if ($u->add_user($username, $password)) {
             echo("<script>window.location.href='login.php?register';</script>");#注册成功,重定向到登录页面
-            die();
         } else {
             echo "<script>prompt_func('此用户名已被使用','warning');</script>";
-            die();
         }
+        die();
     }
-    echo "<script>prompt_func('用户名长度必须大于3小于20,密码长度必须大于5','warning');</script>";
+    echo "<script>prompt_func('用户名长度必须大于5小于20,密码长度必须大于5','warning');</script>";
 }
 ?>

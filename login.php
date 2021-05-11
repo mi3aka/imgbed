@@ -49,12 +49,6 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
     if ($user->verify_user($username, $password)) {
         $_SESSION['login'] = true;
         $_SESSION['username'] = htmlentities($username);
-        $sandbox = "uploads/" . md5($_SESSION['username'] . "!@#$%") . "/";#保证不同用户位于不同的图床,防止跨图床访问
-        if (!is_dir($sandbox)) {
-            mkdir($sandbox);
-        }
-        file_put_contents($sandbox."index.html",'<script language="javascript">window.location.href="../../index.php";</script>');#自动跳转
-        $_SESSION['sandbox'] = $sandbox;
         echo("<script>window.location.href='index.php';</script>");
         die();
     }

@@ -11,9 +11,9 @@ if (!isset($_POST['filename'])) {
 
 include "class.php";
 
-ini_set("open_basedir", getcwd() . ":/etc:/tmp");
+ini_set("open_basedir", getcwd());
 $filename = (string)$_POST['filename'];
-$file = new File($_SESSION['sandbox'] . $filename);
+$file = new File('uploads/' . $filename);
 
 if ($file->check_file_exist()) {
     Header("Content-type: application/octet-stream");

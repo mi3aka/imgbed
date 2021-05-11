@@ -17,8 +17,7 @@ class User
 
     public function check_user_exist($username): bool
     {
-        $stmt = $this->sql->prepare("SELECT `username` FROM `users` WHERE `username` = ?;");
-        #https://www.php.net/manual/zh/mysqli.prepare.php
+        $stmt = $this->sql->prepare("SELECT `username` FROM `users` WHERE `username` = ?;");#https://www.php.net/manual/zh/mysqli.prepare.php
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $stmt->store_result();
@@ -35,7 +34,7 @@ class User
         if ($this->check_user_exist($username)) {
             return false;
         }
-        $password = sha1($password . "!@#$%^&*()");#混淆
+        $password = sha1($password . "!@#$%^&*()");#混淆防止直接猜测
         $stmt = $this->sql->prepare("INSERT INTO `users` (`id`, `username`, `password`) VALUES (NULL, ?, ?);");
         $stmt->bind_param("ss", $username, $password);
         $stmt->execute();
@@ -48,14 +47,15 @@ class User
         if (!$this->check_user_exist($username)) {
             return false;
         }
-        $password = sha1($password . "!@#$%^&*()");#混淆
-        $stmt = $this->sql->prepare("SELECT `password` FROM `users` WHERE `username` = ?;");
+        $password = sha1($password . "!@#$%^&*()");#混淆防止直接猜测
+        $stmt = $this->sql->prepare("SELECT `id`,`password` FROM `users` WHERE `username` = ?;");
         $stmt->bind_param("s", $username);
         $stmt->execute();
-        $stmt->bind_result($result);
+        $stmt->bind_result($uid, $result);
         $stmt->fetch();
         $stmt->close();
         if (isset($result) && $result === $password) {
+            $_SESSION['uid'] = $uid;
             return true;
         }
         return false;
@@ -66,6 +66,54 @@ class User
         $this->sql->close();
     }
 }
+
+class Image
+{
+    public $sql;
+
+    public function __construct()
+    {
+        $this->sql = new mysqli("127.0.0.1", "user", "user", "imgbed");
+        if (mysqli_connect_errno()) {#检查连接
+            printf("Connect failed: %s\n", mysqli_connect_error());
+            exit();
+        }
+        #var_dump($this->sql);
+    }
+
+    public function insert($imgname)
+    {
+        $uid = $_SESSION['uid'];
+        $stmt = $this->sql->prepare("INSERT INTO `images` (`id`, `uid`, `imgname`) VALUES (NULL, ?, ?);");#时间戳自动生成
+        $stmt->bind_param("is", $uid, $imgname);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    public function select(): array
+    {
+        $uid = $_SESSION['uid'];
+        $stmt = $this->sql->prepare("select group_concat(`imgname`),group_concat(`create_date`) from `images` where `uid`=?;");
+        $stmt->bind_param("i", $uid);
+        $stmt->execute();
+        $stmt->bind_result($imgname, $create_date);
+        $stmt->fetch();
+        $stmt->close();
+        $imgname = explode(',', $imgname);
+        $create_date = explode(',', $create_date);
+        return array($imgname, $create_date);
+    }
+
+    public function delete($imgname)
+    {
+        $uid = $_SESSION['uid'];
+        $stmt = $this->sql->prepare("DELETE FROM `images` where `uid`=? and `imgname`=?;");
+        $stmt->bind_param("is", $uid, $imgname);
+        $stmt->execute();
+        $stmt->close();
+    }
+}
+
 
 class FileList
 {
@@ -96,7 +144,7 @@ class FileList
     public function __destruct()
     {
         $table = '<div id="container" class="container"><div class="table-responsive"><table id="table" class="table table-bordered table-hover sm-font">';#https://getbootstrap.com/docs/4.0/content/tables/
-        $table .= '<thead><th scope="col" class="text-center">文件名</th><th scope="col" class="text-center">大小</th><th scope="col" class="text-center">操作</th></thead>';
+        $table .= '<thead><th scope="col" class="text-center">URL</th><th scope="col" class="text-center">大小</th><th scope="col" class="text-center">操作</th></thead>';
         $table .= '<tbody>';
         for ($i = 0; $i < count($this->filename); $i++) {
             $url = 'http://0.0.0.0/' . $_SESSION['sandbox'] . $this->filename[$i];
@@ -129,7 +177,7 @@ class File
         }
     }
 
-    public function get_file_name()
+    public function get_file_name(): string
     {
         return basename($this->filename);
     }
