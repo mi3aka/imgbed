@@ -118,24 +118,21 @@ class Image
 class FileList
 {
     private $filename;
+    private $date;
     private $size;
 
-    public function __construct($path)
+    public function __construct()
     {
-        $this->filename = array();
-        $this->size = array();
-        $files = scandir($path);
+        $image=new Image();
+        list($imgname,$create_date)=$image->select();
 
-        $key = array_search(".", $files);#剔除.和..以及index.html
-        unset($files[$key]);
-        $key = array_search("..", $files);
-        unset($files[$key]);
-        $key = array_search("index.html", $files);
-        unset($files[$key]);
-        foreach ($files as $value) {
-            $file = new File($path . $value);
+        $this->filename=$imgname;
+        $this->date=$create_date;
+        $this->size = array();
+
+        foreach ($this->filename as $value) {
+            $file = new File('uploads/' . $value);
             if ($file->check_file_exist()) {
-                array_push($this->filename, $file->get_file_name());
                 array_push($this->size, $file->get_file_size());
             }
         }
@@ -144,12 +141,13 @@ class FileList
     public function __destruct()
     {
         $table = '<div id="container" class="container"><div class="table-responsive"><table id="table" class="table table-bordered table-hover sm-font">';#https://getbootstrap.com/docs/4.0/content/tables/
-        $table .= '<thead><th scope="col" class="text-center">URL</th><th scope="col" class="text-center">大小</th><th scope="col" class="text-center">操作</th></thead>';
+        $table .= '<thead><th scope="col" class="text-center">URL</th><th scope="col" class="text-center">日期</th><th scope="col" class="text-center">大小</th><th scope="col" class="text-center">操作</th></thead>';
         $table .= '<tbody>';
         for ($i = 0; $i < count($this->filename); $i++) {
-            $url = 'http://0.0.0.0/' . $_SESSION['sandbox'] . $this->filename[$i];
+            $url = 'http://0.0.0.0/' . 'uploads/' . $this->filename[$i];
             $table .= '<tr>';
             $table .= '<td class="text-center">' . htmlentities($url) . '</td>';
+            $table .= '<td class="text-center">' . htmlentities($this->date[$i]) . '</td>';
             $table .= '<td class="text-center">' . htmlentities($this->size[$i]) . '</td>';
             $table .= '<td class="text-center" filename="' . htmlentities($this->filename[$i]) . '"><a href="#" class="download">下载</a> / <a href="' . htmlentities($url) . '" target="_blank" class="preview">预览</a> / <a href="#" class="delete">删除</a></td>';
             $table .= '</tr>';
@@ -177,10 +175,10 @@ class File
         }
     }
 
-    public function get_file_name(): string
+    /*public function get_file_name(): string
     {
         return basename($this->filename);
-    }
+    }*/
 
     public function get_file_size(): string
     {
