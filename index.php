@@ -28,7 +28,7 @@ if (!isset($_SESSION['login'])) {
         <li class="active ml-auto">你好,<?php echo $_SESSION['username'] ?> <a href="logout.php">注销</a></li>
     </ol>
     </nav>
-    <input type="file" id="imgupload" class="upload">
+    <input type="file" multiple id="imgupload" class="upload">
     <div class="top" id="prompt_bar"></div><!--浮动提示栏-->
 </body>
 </html>

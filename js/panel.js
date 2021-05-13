@@ -1,7 +1,8 @@
 function upload() {
     var formData = new FormData();
-    formData.append('file', $('#imgupload')[0].files[0]);
-
+    for (var i = 0; i < $('#imgupload')[0].files.length; i++) {
+        formData.append('file[]', $('#imgupload')[0].files[i]);
+    }
     $.ajax({
         url: 'upload.php',
         type: 'POST',
@@ -14,7 +15,9 @@ function upload() {
             } else {
                 prompt_func(json['error'], 'warning');
             }
-            setTimeout(function () {location.reload();}, 500);
+            setTimeout(function () {
+                location.reload();
+            }, 500);
         }
     });
     $('#imgupload')[0].value = '';
@@ -46,7 +49,9 @@ function deletefile() {
             } else {
                 prompt_func(json['error'], 'danger');
             }
-            setTimeout(function () {location.reload();}, 500);
+            setTimeout(function () {
+                location.reload();
+            }, 500);
         }
     });
 }
