@@ -1,38 +1,36 @@
 <?php
 session_start();
 if (!isset($_SESSION['login'])) {
-    header("Location: login.php");
+    header("Location: index.php");
     die();
 }
 
 include "class.php";
 
-$fail = array();
-
-if (isset($_FILES["file"])) {
-    for ($i = 0; $i < count($_FILES['file']['name']); ++$i) {
-        $file_name = $_FILES['file']['name'][$i];
-        $file_type = $_FILES['file']['type'][$i];
-        $file_extension = substr($file_name, strrpos($file_name, '.') + 1);#获得上传文件的扩展名
-        if ((($file_extension == "jpg" || $file_extension == "jpeg") && ($file_type == "image/jpeg")) || (($file_extension == "png") && ($file_type == "image/png")) || (($file_extension == "gif") && ($file_type == "image/gif"))) {
-            $file_name = sha1(date('YmdGHs') . substr(microtime(true), 11, 4) . $_SESSION['username'] . $file_name) . '.' . $file_extension;
-            $path = 'uploads/' . $file_name;
-            move_uploaded_file($_FILES["file"]["tmp_name"][$i], $path);
+if (isset($_GET['sent'])) {
+    $file_array = $_POST['file'];
+    $file_location = 'uploads/';
+    $file_num = sizeof($file_array);
+    if (!$file_num) {
+        header("Location: index.php");
+        die();
+    }
+    for ($i = 0; $i < $file_num; $i++) {
+        $this_file_json_object = $file_array[$i];
+        $this_file = json_decode($this_file_json_object, true);
+        $this_file_name = $this_file["name"];
+        $this_file_type = $this_file["type"];
+        $this_file_data = $this_file["data"];
+        $this_file_extension = substr($this_file_name, strrpos($this_file_name, '.') + 1);
+        if ((($this_file_extension == "jpg" || $this_file_extension == "jpeg") && ($this_file_type == "image/jpeg")) || (($this_file_extension == "png") && ($this_file_type == "image/png")) || (($this_file_extension == "gif") && ($this_file_type == "image/gif"))) {
+            $this_file_name = sha1(date('YmdGHs') . substr(microtime(true), 11, 4) . $_SESSION['username'] . $this_file_name) . '.' . $this_file_extension;
+            $this_file_save_path = $file_location . $this_file_name;
+            $this_file_decode_data = base64_decode($this_file_data);
+            file_put_contents($this_file_save_path, $this_file_decode_data);
             $image = new Image();
-            $image->insert($file_name);#在数据库中保存文件名
-        } else {
-            array_push($fail, $file_name);
+            $image->insert($this_file_name);#在数据库中保存文件名
         }
     }
-    Header("Content-type: application/json");
-    if (count($fail) == 0) {
-        $response = array("success" => true, "error" => "");
-    } else {
-        $error = "";
-        foreach ($fail as $value) {
-            $error .= $value . " ";
-        }
-        $response = array("success" => false, "error" => $error . "上传失败,只允许上传后缀为.jpg|.jpeg|.png|.gif的图片文件!");
-    }
-    echo json_encode($response);
+    header("Location: index.php");
+    die();
 }
