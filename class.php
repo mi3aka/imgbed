@@ -140,14 +140,18 @@ class FileList
 
     public function __destruct()
     {
-        $table = '<div id="container" class="container"><div class="table-responsive"><table id="table" class="table table-bordered table-hover sm-font">';#https://getbootstrap.com/docs/4.0/content/tables/
-        $table .= '<thead><th scope="col" class="text-center">URL</th><th scope="col" class="text-center">日期</th><th scope="col" class="text-center">大小</th><th scope="col" class="text-center">操作</th></thead>';
+        $table = '<div class="container"><div class="table-responsive"><table id="table" class="table table-bordered table-hover sm-font">';#https://getbootstrap.com/docs/4.0/content/tables/
+        $table .= '<thead><th scope="col" class="text-center"><div class="btn-group" role="group" aria-label="Basic example">
+  <button type="button" class="btn btn-sm btn-outline-primary" id="url" data-toggle="collapse" data-target=".url">URL</button>
+  <button type="button" class="btn btn-sm btn-outline-success" id="html" data-toggle="collapse" data-target=".html">HTML</button>
+  <button type="button" class="btn btn-sm btn-outline-info" id="markdown" data-toggle="collapse" data-target=".markdown">Markdown</button>
+</div></th><th scope="col" class="text-center">日期</th><th scope="col" class="text-center">大小</th><th scope="col" class="text-center">操作</th></thead>';
         $table .= '<tbody>';
         for ($i = 0; $i < count($this->filename); $i++) {
             if ($this->filename[$i]) {
                 $url = 'http://0.0.0.0/' . 'uploads/' . $this->filename[$i];
                 $table .= '<tr>';
-                $table .= '<td class="text-center">' . htmlentities($url) . '</td>';
+                $table .= '<td class="text-center">' . '<div class="tab-pane fade in active show url collapse">' . htmlentities($url) . '</div>' . '<div class="tab-pane fade in html collapse"><pre>&lt;img src="' . htmlentities($url) . '"&gt;</pre></div>' . '<div class="tab-pane fade in markdown collapse">![](' . htmlentities($url) . ')</div>' . '</td>';
                 $table .= '<td class="text-center">' . htmlentities($this->date[$i]) . '</td>';
                 $table .= '<td class="text-center">' . htmlentities($this->size[$i]) . '</td>';
                 $table .= '<td class="text-center" filename="' . htmlentities($this->filename[$i]) . '"><a href="#" class="download">下载</a> / <a href="' . htmlentities($url) . '" target="_blank" class="preview">预览</a> / <a href="#" class="delete">删除</a></td>';
@@ -155,6 +159,66 @@ class FileList
             }
         }
         $table .= '</tbody></table></div>';
+        $table .= '<script>document.getElementById("markdown").addEventListener("click", function () {
+            let url = document.getElementsByClassName("url")
+            for (let i = 0; i < url.length; i++) {
+                url[i].classList.remove("active")
+                url[i].classList.remove("show")
+            }
+            let html = document.getElementsByClassName("html")
+            for (let i = 0; i < url.length; i++) {
+                html[i].classList.remove("active")
+                html[i].classList.remove("show")
+            }
+            let markdown = document.getElementsByClassName("markdown")
+            for (let i = 0; i < markdown.length; i++) {
+                markdown[i].classList.remove("active")
+                markdown[i].classList.remove("show")
+            }
+            for (let i = 0; i < markdown.length; i++) {
+                markdown[i].classList.add("active")
+            }
+        })
+        document.getElementById("url").addEventListener("click", function () {
+            let markdown = document.getElementsByClassName("markdown")
+            for (let i = 0; i < markdown.length; i++) {
+                markdown[i].classList.remove("active")
+                markdown[i].classList.remove("show")
+            }
+            let html = document.getElementsByClassName("html")
+            for (let i = 0; i < html.length; i++) {
+                html[i].classList.remove("active")
+                html[i].classList.remove("show")
+            }
+            let url = document.getElementsByClassName("url")
+            for (let i = 0; i < url.length; i++) {
+                url[i].classList.remove("active")
+                url[i].classList.remove("show")
+            }
+            for (let i = 0; i < url.length; i++) {
+                url[i].classList.add("active")
+            }
+        })
+        document.getElementById("html").addEventListener("click", function () {
+            let markdown = document.getElementsByClassName("markdown")
+            for (let i = 0; i < markdown.length; i++) {
+                markdown[i].classList.remove("active")
+                markdown[i].classList.remove("show")
+            }
+            let url = document.getElementsByClassName("url")
+            for (let i = 0; i < url.length; i++) {
+                url[i].classList.remove("active")
+                url[i].classList.remove("show")
+            }
+            let html = document.getElementsByClassName("html")
+            for (let i = 0; i < url.length; i++) {
+                html[i].classList.remove("active")
+                html[i].classList.remove("show")
+            }
+            for (let i = 0; i < html.length; i++) {
+                html[i].classList.add("active")
+            }
+        })</script>';
         echo $table;
     }
 }
@@ -176,11 +240,6 @@ class File
             return false;
         }
     }
-
-    /*public function get_file_name(): string
-    {
-        return basename($this->filename);
-    }*/
 
     public function get_file_size(): string
     {
