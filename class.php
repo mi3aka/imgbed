@@ -15,6 +15,19 @@ class User
         #var_dump($this->sql);
     }
 
+    public function add_user($username, $password): bool
+    {
+        if ($this->check_user_exist($username)) {
+            return false;
+        }
+        $password = sha1($password . "!@#$%^&*()");#混淆防止直接猜测
+        $stmt = $this->sql->prepare("INSERT INTO `users` (`id`, `username`, `password`) VALUES (NULL, ?, ?);");
+        $stmt->bind_param("ss", $username, $password);
+        $stmt->execute();
+        $stmt->close();
+        return true;
+    }
+
     public function check_user_exist($username): bool
     {
         $stmt = $this->sql->prepare("SELECT `username` FROM `users` WHERE `username` = ?;");#https://www.php.net/manual/zh/mysqli.prepare.php
@@ -26,19 +39,6 @@ class User
         if ($count === 0) {
             return false;
         }
-        return true;
-    }
-
-    public function add_user($username, $password): bool
-    {
-        if ($this->check_user_exist($username)) {
-            return false;
-        }
-        $password = sha1($password . "!@#$%^&*()");#混淆防止直接猜测
-        $stmt = $this->sql->prepare("INSERT INTO `users` (`id`, `username`, `password`) VALUES (NULL, ?, ?);");
-        $stmt->bind_param("ss", $username, $password);
-        $stmt->execute();
-        $stmt->close();
         return true;
     }
 
@@ -120,6 +120,7 @@ class FileList
     private $filename;
     private $date;
     private $size;
+    private $file_location = 'uploads/';
 
     public function __construct()
     {
@@ -131,7 +132,7 @@ class FileList
         $this->size = array();
 
         foreach ($this->filename as $value) {
-            $file = new File('uploads/' . $value);
+            $file = new File($this->file_location . $value);
             if ($file->check_file_exist()) {
                 array_push($this->size, $file->get_file_size());
             }
@@ -149,7 +150,7 @@ class FileList
         $table .= '<tbody>';
         for ($i = 0; $i < count($this->filename); $i++) {
             if ($this->filename[$i]) {
-                $url = 'http://0.0.0.0/' . 'uploads/' . $this->filename[$i];
+                $url = 'http://0.0.0.0/' . $this->file_location . $this->filename[$i];
                 $table .= '<tr>';
                 $table .= '<td class="text-center">' . '<div class="tab-pane fade in active show url collapse">' . htmlentities($url) . '</div>' . '<div class="tab-pane fade in html collapse"><pre>&lt;img src="' . htmlentities($url) . '"&gt;</pre></div>' . '<div class="tab-pane fade in markdown collapse">![](' . htmlentities($url) . ')</div>' . '</td>';
                 $table .= '<td class="text-center">' . htmlentities($this->date[$i]) . '</td>';
@@ -220,6 +221,41 @@ class FileList
             }
         })</script>';
         echo $table;
+    }
+}
+
+class Gallery
+{
+    private $filename;
+    private $file_location = 'uploads/';
+    private $file_array = array();
+
+    public function __construct()
+    {
+        $image = new Image();
+        $imgname = $image->select()[0];
+        $this->filename = $imgname;
+        for ($i = 0; $i < count($this->filename); $i++) {
+            $file = new File($this->file_location . $this->filename[$i]);
+            if ($file->check_file_exist()) {
+                $img_info = getimagesize($this->file_location . $this->filename[$i]);
+                array_push($this->file_array, array("filename" => $this->filename[$i], "width" => $img_info[0], "height" => $img_info[1]));
+            }
+        }
+    }
+
+    public function __destruct()
+    {
+        $html = '<section>';
+        for ($i = 0; $i < count($this->file_array); $i++) {
+            $html .= sprintf('<div style="width:%dpx;flex-grow:%d">', $this->file_array[$i]["width"]*200/$this->file_array[$i]["height"], $this->file_array[$i]["width"]*200/$this->file_array[$i]["height"]);
+            $html .= sprintf('<i style="padding-bottom:%d%%"></i>', $this->file_array[$i]["height"]/$this->file_array[$i]["width"]*100);
+            $html .= sprintf('<img alt="" src="%s">', $this->file_location . $this->file_array[$i]["filename"]);
+            $html .= '</div>';
+        }
+        $html .= '</section>';
+        #var_dump($html);
+        echo $html;
     }
 }
 

@@ -13,7 +13,8 @@ include "class.php";
 
 ini_set("open_basedir", getcwd());
 $filename = (string)$_POST['filename'];
-$file = new File('uploads/' . $filename);
+$file_location = 'uploads/';
+$file = new File($file_location . $filename);
 
 if ($file->check_file_exist()) {
     Header("Content-type: application/octet-stream");
