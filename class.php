@@ -252,9 +252,9 @@ class Gallery
             $html .= sprintf('<i style="padding-bottom:%d%%"></i>', $this->file_array[$i]["height"] / $this->file_array[$i]["width"] * 100);
             $html .= sprintf('<img alt="" src="%s">', $this->file_location . $this->file_array[$i]["filename"]);
             $html .= sprintf('<span class="menu" filename="%s">', $this->file_array[$i]["filename"]);
-            $html .= sprintf('<a href="%s" target="_blank" class="preview">预览</a><br>', $this->file_location . $this->file_array[$i]["filename"]);
-            $html .= '<a href="#" class="download">下载</a><br>';
-            $html .= '<a href="#" class="delete">删除</a>';
+            $html .= sprintf('<a href="%s" target="_blank" class="preview menu-link">预览</a><br>', $this->file_location . $this->file_array[$i]["filename"]);
+            $html .= '<a href="#" class="download menu-link">下载</a><br>';
+            $html .= '<a href="#" class="delete menu-link">删除</a>';
             $html .= '</span>';
             $html .= '</div>';
         }
