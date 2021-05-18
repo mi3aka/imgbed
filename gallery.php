@@ -16,6 +16,7 @@ if (!isset($_SESSION['login'])) {
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.0/dist/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/panel.js"></script>
     </head>
     <style>
         .top {
@@ -33,10 +34,43 @@ if (!isset($_SESSION['login'])) {
             flex-grow: 999999;
         }
 
-        div {
+        .image {
             margin: 2px;
             background-color: transparent;
             position: relative;
+        }
+
+        .image:hover {
+            box-shadow: 0 0 25px rgba(186, 200, 207, 1);
+        }
+
+        .image:hover .menu {
+            visibility: visible;
+        }
+
+        .menu {
+            visibility: hidden;
+            width: 160px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            left: 50%;
+            margin-left: -80px;
+        }
+
+        .menu::after {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent black transparent;
         }
 
         i {
