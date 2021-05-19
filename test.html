@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:margin-top="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>登录</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 引入 Bootstrap -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <!-- 使用modal -->
+  <script src="http://cdn.bootcss.com/jquery/1.7.2/jquery.min.js"></script>
+  <script src="http://cdn.bootcss.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+  <!-- HTML5 Shiv 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询 -->
+  <!-- 注意： 如果通过 file://  引入 Respond.js 文件，则该文件无法起效果 -->
+
+  <!-- 整体背景 -->
+  <style type="text/css">
+    html{
+      height: 100%;
+    }
+    body{
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      height: 100%;
+    }
+    .col-center-block {
+      float: none;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 20%;
+      text-align: center;
+      max-width: 333px;
+    }
+    .edit {
+      margin-top: 10px;
+    }
+    .textcolor{
+      color: white;
+    }
+
+    /*model显示居中*/
+    .modal_wrapper{
+      display: table;
+      height: 100%;
+      margin: 0px auto;
+    }
+    .modal-dialog{
+      display: table-cell;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<!-- 两个输入框 -->
+<div class="container">
+  <div class="row row-centered">
+    <div class="col-xs-6 col-md-4 col-center-block">
+      <h1 class="textcolor">欢迎登录</h1>
+      <form action="../Module/login.php" method="post">
+        <!-- 输入id -->
+        <div class="input-group input-group-md">
+                        <span class="input-group-addon" id="sizing-addon1">
+                            <i class="glyphicon glyphicon-user" aria-hidden="true"></i></span>
+          <input type="text" class="form-control" id="userid" name="userid" placeholder="请输入学号"/>
+        </div>
+        <!-- 输入密码 -->
+        <div class="edit input-group input-group-md">
+                        <span class="input-group-addon" id="sizing-addon2">
+                            <i class="glyphicon glyphicon-lock"></i></span>
+          <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码"/>
+        </div>
+        <br/>
+
+        <button type="submit" class="btn btn-success btn-block" name="submit" value="登录">登录</button>
+
+        <a type="submit" class="btn btn-primary btn-block" data-toggle="modal" data-target="#register">注册</a>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- 注册窗口 -->
+<div id="register" class="modal fade" tabindex="-1">
+  <div class="modal_wrapper">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button class="close" data-dismiss="modal">
+            <span>×</span>
+          </button>
+        </div>
+        <div class="modal-title">
+          <h1 class="text-center">注册</h1>
+        </div>
+        <div class="modal-body">
+          <form action="../Module/register.php" method="post">
+            <!-- 输入id -->
+            <div class="input-group input-group-md">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-user" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" id="re_userid" name="userid" placeholder="请输入学号"/>
+            </div>
+            <!-- 输入姓名 -->
+            <div class="edit input-group input-group-md">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-user"></i></span>
+              <input type="password" class="form-control" id="re_username" name="username" placeholder="请输入姓名"/>
+            </div>
+            <!-- 输入密码 -->
+            <div class="edit input-group input-group-md">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-lock"></i></span>
+              <input type="password" class="form-control" id="re_password" name="password" placeholder="请输入密码"/>
+            </div>
+            <!-- 确认密码 -->
+            <div class="edit input-group input-group-md">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-ok"></i></span>
+              <input type="password" class="form-control" id="re_confirm" name="confirm" placeholder="请再次确认密码"/>
+            </div>
+            <br/>
+            <button type="Submit" class="btn btn-success btn-block" name="Submit" value="注册">注册</button>
+            <button class="btn btn-primary btn-block" data-dismiss="modal">返回</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

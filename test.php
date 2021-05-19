@@ -23,7 +23,7 @@ if (isset($_SESSION['login'])) {
     </head>
 
     <body class="text-center">
-    <form class="input-form" action="register.php" method="POST">
+    <form class="input-form" action="test.php" method="POST">
         <h1 class="h3 font-weight-normal">注册</h1>
         <div class="reg">
             <input type="text" name="username" class="form-control" placeholder="请输入用户名" required autofocus>
@@ -60,31 +60,6 @@ if (isset($_SESSION['login'])) {
 
 
 <?php
-include "class.php";
-
-$question_array = array("您初中班主任的名字是?", "您的宠物的名字是", "您最熟悉的童年好友的名字是?", "对您影响最大的人的名字是?");
-
-if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["confirm"]) && isset($_POST["question"]) && isset($_POST["answer"])) {
-    $user = new User();
-    $username = (string)$_POST["username"];
-    $password = (string)$_POST["password"];
-    $confirm = (string)$_POST["confirm"];
-    $question = (string)$_POST["question"];
-    $answer = (string)$_POST["answer"];
-    if(in_array($question,$question_array,true)){
-
-    }
-    else{
-        echo "<script>prompt_func('密保问题被篡改!!!','warning');</script>";
-    }
-    /*if (strlen($username) < 20 && strlen($username) > 5 && strlen($password) > 5) {
-        if ($user->add_user($username, $password)) {
-            echo("<script>window.location.href='login.php?register';</script>");#注册成功,重定向到登录页面
-        } else {
-            echo "<script>prompt_func('此用户名已被使用','warning');</script>";
-        }
-        die();
-    }
-    echo "<script>prompt_func('用户名长度必须大于5小于20,密码长度必须大于5','warning');</script>";*/
-}
+var_dump($_POST);
+var_dump($_REQUEST);
 ?>
