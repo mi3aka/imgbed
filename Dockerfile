@@ -7,8 +7,8 @@ RUN echo "mysql-server mysql-server/root_password password root" | debconf-set-s
 RUN ln -snf /usr/share/zoneinfo/$TimeZone /etc/localtime && echo $TimeZone > /etc/timezone; \
     sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list \
     && sed -i 's/security.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list \
-    && apt-get update;apt-get upgrade -y;apt-get install mariadb-server -y; \
-    docker-php-ext-install mysqli \
+    && apt-get update;apt-get upgrade -y;apt-get install mariadb-server libpng-dev zlib1g-dev -y; \
+    docker-php-ext-install mysqli gd \
     && pecl install xdebug-2.9.8 \
     && docker-php-ext-enable xdebug
 COPY db_init.sh /tmp/db_init.sh

@@ -15,14 +15,15 @@ class User
         #var_dump($this->sql);
     }
 
-    public function add_user($username, $password): bool
+    public function add_user($username, $password, $question_array_posi, $answer): bool
     {
         if ($this->check_user_exist($username)) {
             return false;
         }
         $password = sha1($password . "!@#$%^&*()");#混淆防止直接猜测
-        $stmt = $this->sql->prepare("INSERT INTO `users` (`id`, `username`, `password`) VALUES (NULL, ?, ?);");
-        $stmt->bind_param("ss", $username, $password);
+        $answer = sha1($answer . "1234567890");#混淆防止直接猜测
+        $stmt = $this->sql->prepare("INSERT INTO `users` (`id`, `username`, `password`, `posi`, `answer`) VALUES (NULL, ?, ?, ?, ?);");
+        $stmt->bind_param("ssis", $username, $password, $question_array_posi, $answer);
         $stmt->execute();
         $stmt->close();
         return true;
@@ -40,6 +41,31 @@ class User
             return false;
         }
         return true;
+    }
+
+    public function check_answer($username, $question_array_posi, $answer): bool
+    {
+        $answer = sha1($answer . "1234567890");#混淆防止直接猜测
+        $stmt = $this->sql->prepare("SELECT `answer`,`posi` FROM `users` WHERE `username` = ?;");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $stmt->bind_result($sql_answer, $posi);
+        $stmt->fetch();
+        $stmt->close();
+        if ($answer === $sql_answer && $posi === $question_array_posi) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function update_password($username, $password)
+    {
+        $password = sha1($password . "!@#$%^&*()");#混淆防止直接猜测
+        $stmt = $this->sql->prepare("UPDATE `users` SET `password` = ? WHERE `username` = ?;");
+        $stmt->bind_param("ss", $password, $username);
+        $stmt->execute();
+        $stmt->close();
     }
 
     public function verify_user($username, $password): bool

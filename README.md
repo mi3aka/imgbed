@@ -9,7 +9,9 @@ CREATE database imgbed
 CREATE TABLE users(
     id int PRIMARY KEY AUTO_INCREMENT,
     username varchar(100),
-    password varchar(100)
+    password varchar(100),
+    posi int(1),#记录所选择的密保问题
+    answer varchar(100)
 );
 CREATE TABLE images(
     id int PRIMARY KEY AUTO_INCREMENT,
@@ -26,4 +28,4 @@ CREATE TABLE images(
 * [x] 多图上传,拖拽上传,上传预览
 * [x] 画廊功能
 * [x] 界面美化
-* [ ] 登陆验证
+* [x] 登陆验证
