@@ -280,7 +280,7 @@ class Gallery
             $html .= sprintf('<span class="menu" filename="%s">', $this->file_array[$i]["filename"]);
             $html .= sprintf('<a href="%s" target="_blank" class="preview menu-link">预览</a><br>', $this->file_location . $this->file_array[$i]["filename"]);
             $html .= '<a href="#" class="download menu-link">下载</a><br>';
-            $html .= '<a href="#" class="delete menu-link">删除</a>';
+            $html .= '<a href="gallery.php" class="delete menu-link">删除</a>';
             $html .= '</span>';
             $html .= '</div>';
         }
