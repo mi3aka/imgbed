@@ -16,4 +16,4 @@ RUN chmod 700 /tmp/db_init.sh \
     && /tmp/db_init.sh \
     && rm /tmp/db_init.sh \
     && chown -R www-data:www-data /var/www/html/
-CMD service apache2 restart & service mysql restart & tail -F /var/log/apache2/access.log;
+CMD systemctl restart apache2 & service mysql restart & tail -F /var/log/apache2/access.log;

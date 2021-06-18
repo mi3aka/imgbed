@@ -19,6 +19,7 @@ if (isset($_SESSION['login'])) {
             margin-top: 2px;
         }
     </style>
+    <link href="css/panel.css" rel="stylesheet">
 </head>
 
 <body class="text-center">

@@ -6,13 +6,18 @@ if (!isset($_SESSION['login'])) {
 }
 
 if (!isset($_POST['filename'])) {
+    header("Location: index.php");
+    die();
+}
+$filename = (string)$_POST['filename'];
+if(preg_match("/ph/i",$filename)){//防止跨路径读取php文件
+    header("Location: index.php");
     die();
 }
 
 include "class.php";
 
-ini_set("open_basedir", getcwd());
-$filename = (string)$_POST['filename'];
+ini_set("open_basedir", getcwd());//防止跨路径读取
 $file_location = 'uploads/';
 $file = new File($file_location . $filename);
 

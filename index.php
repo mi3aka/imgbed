@@ -15,6 +15,7 @@ if (!isset($_SESSION['login'])) {
         <link href="//cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel='stylesheet' href='css/filepond-plugin-image-preview.min.css'/>
         <link rel='stylesheet' href='css/filepond.min.css'/>
+        <link href="css/panel.css" rel="stylesheet">
         <script src="//cdn.jsdelivr.net/npm/jquery@3.4.0/dist/jquery.min.js"></script>
         <script src="//cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
         <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css'>
@@ -65,6 +66,7 @@ if (!isset($_SESSION['login'])) {
             <input type="submit" value="Upload" class="btn btn-primary btn-block"/>
         </form>
     </div>
+    <div class="top" id="prompt_bar"></div><!--浮动提示栏-->
     <br>
     <script src='js/filepond-plugin-file-encode.min.js'></script>
     <script src='js/filepond-plugin-image-preview.min.js'></script>
